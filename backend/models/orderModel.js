@@ -11,7 +11,7 @@ import mongoose from "mongoose";
             qty: {type: Number, required: true},
             image: {type: String, required: true},
             price: {type: Number, required: true},
-            products:{
+            product:{
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
                 ref: "Product",
@@ -43,6 +43,11 @@ import mongoose from "mongoose";
         required: true,
         default: 0.0,
 
+    },
+    taxPrice: {
+        type: Number,
+        required: true,
+        default: 0.0,
     },
     
     shippingPrice: {
@@ -79,4 +84,4 @@ import mongoose from "mongoose";
 
  const Order = mongoose.model('Order', orderSchema)
 
- export default Order
+ export default Order;
