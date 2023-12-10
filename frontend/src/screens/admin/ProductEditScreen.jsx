@@ -115,6 +115,7 @@ const uploadFileHandler = async (e) => {
                 </Form.Control>
                 <Form.Control type='file' label='Choose file' onChange={uploadFileHandler}></Form.Control>
              </Form.Group>
+              {loadingUpload && <Loader ></Loader>}
 
             <Form.Group controlId='brand' className='my-2'>
                 <Form.Label>Brand</Form.Label>
