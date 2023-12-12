@@ -41,15 +41,16 @@ const registerUser = asyncHandler(async (req, res) => {
     password
    });
    if (user) {
+    generateToken(res, user._id)
    
-    res.status(200).json({
+    res.status(201).json({
         _id: user._id,
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
     })
    } else {
-    res.status(404)
+    res.status(400)
     throw new Error('User not found ')
    }
 })

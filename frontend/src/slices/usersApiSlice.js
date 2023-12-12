@@ -39,7 +39,7 @@ import { apiSlice } from "./apiSlice";
                 url: USERS_URL,
             }),
             providesTags: ['Users'],
-            keepUnusedDataFor: 5
+            keepUnusedDataFor: 5,
         }),
         deleteUser: builder.mutation({
             query: (userId) => ({

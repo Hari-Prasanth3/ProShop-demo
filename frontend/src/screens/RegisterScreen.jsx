@@ -22,7 +22,7 @@ const RegisterScreen = () => {
      const { userInfo} = useSelector((state) => state.auth);
       const {search} = useLocation();
       const sp = new URLSearchParams(search);
-      const redirect = sp.get('redirect' || '/');
+      const redirect = sp.get('redirect') || '/';
        
       useEffect(() => {
         if (userInfo) {
@@ -39,7 +39,7 @@ const RegisterScreen = () => {
         } else {
        try {
         const res = await register({name, email, password}).unwrap();
-        dispatch(setCredentials({...res }));
+        dispatch(setCredentials({...res, }));
         navigate(redirect);
 
        } catch (err) {
