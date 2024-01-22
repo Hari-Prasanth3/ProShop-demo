@@ -20,11 +20,16 @@ const ShippingScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    navigate("/payment");
-  };
+    if (country.toLowerCase() === "india") {
+      dispatch(saveShippingAddress({ address, city, postalCode, country }));
+      navigate("/payment");
+    } else {
+      alert("Please enter India as the country");
+    }
+  }
 
   return (
     <FormContainer>

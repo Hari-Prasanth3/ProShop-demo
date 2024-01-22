@@ -32,7 +32,7 @@ const Header = () => {
   console.log(cartItems);
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar bg="danger" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
