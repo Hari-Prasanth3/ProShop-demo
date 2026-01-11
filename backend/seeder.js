@@ -10,7 +10,8 @@ import connectDB from "./config/db.js";
 
 dotenv.config();
 
-connectDB();
+const mongoURI = process.env.MONGO_URI || 'mongodb+srv://harihari71775:Ey6P2vquiY18mrZS@cluster0.i9gmnew.mongodb.net/';
+connectDB(mongoURI);
 
 const importData = async () => {
   try {
