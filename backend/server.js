@@ -18,14 +18,34 @@ connectDB(mongoURI);
 const port =  5001;
 
 const app = express();
+
+// CORS configuration - Allow all origins
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow all origins (return the origin if provided, or true for no origin)
+    if (!origin) {
+      // For same-origin requests or requests without origin header
+      callback(null, true);
+    } else {
+      // Return the specific origin to allow credentials
+      callback(null, origin);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Type', 'Authorization'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
+
 //body parser middleware
 app.use(express.json());
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
-    : 'http://localhost:3000',
-  credentials: true
-}));
 app.use(express.urlencoded({ extended: true }));
 //cookieParser middleware
 app.use(cookieParser());
