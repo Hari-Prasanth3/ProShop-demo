@@ -13,7 +13,7 @@ import cors from "cors";
 
 
 // connectDB(value); //connect to mangoDB
-const mongoURI = 'mongodb+srv://harihari71775:Ey6P2vquiY18mrZS@cluster0.i9gmnew.mongodb.net/';
+const mongoURI = process.env.MONGO_URI || 'mongodb+srv://harihari71775:Ey6P2vquiY18mrZS@cluster0.i9gmnew.mongodb.net/';
 connectDB(mongoURI);
 const port =  5001;
 
@@ -39,24 +39,29 @@ app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
 );
 
-const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-
-if (process.env.NODE_ENV === "production") {
-  // set static folder
-  app.use(express.static(path.join(__dirname, "/frontend/build")));
-
-  // any route that is not api will be redirected to indexedDB.html
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running....");
-  });
+// Static file serving for uploads (only in non-Vercel environments)
+// On Vercel, use cloud storage instead
+if (process.env.VERCEL !== '1') {
+  const __dirname = path.resolve();
+  app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 }
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send("API is running....");
+});
+
+// Health check endpoint for Vercel
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "Backend API is running" });
+});
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`server running on port ${port}`));
+// Only listen if not in Vercel environment
+if (process.env.VERCEL !== '1') {
+  app.listen(port, () => console.log(`server running on port ${port}`));
+}
+
+export default app;
