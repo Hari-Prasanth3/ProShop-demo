@@ -66,7 +66,7 @@ const ProductEditScreen = () => {
       refetch();
       navigate("/admin/productlist");
     } catch (error) {
-      toast.error(error?.data?.message || error.error);
+      toast.error(error?.data?.message || (typeof error.error === 'string' ? error.error : 'An error occurred'));
     }
   };
 
@@ -78,7 +78,7 @@ const ProductEditScreen = () => {
       toast.success(res.message);
       setImage(res.image);
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : 'An error occurred'));
     }
   };
 
@@ -95,7 +95,7 @@ const ProductEditScreen = () => {
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <Message variant="danger">{error.data.message}</Message>
+          <Message variant="danger">{error?.data?.message || (typeof error.error === 'string' ? error.error : 'An error occurred')}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">

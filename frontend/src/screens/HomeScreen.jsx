@@ -31,7 +31,7 @@ const HomeScreen = () => {
         <Loader />
       ) : error ? (
         <Message variant="danger">
-          {error?.data?.message || error.error}
+          {error?.data?.message || (typeof error.error === 'string' ? error.error : 'An error occurred')}
         </Message>
       ) : (
         <>

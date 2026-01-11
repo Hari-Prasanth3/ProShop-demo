@@ -61,7 +61,7 @@ const ProductScreen = () => {
       setRating(0);
       setComment("");
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : 'An error occurred'));
     }
   };
 
@@ -75,7 +75,7 @@ const ProductScreen = () => {
         <Loader />
       ) : error ? (
         <Message variant="danger">
-          {error?.data?.message || error.error}
+          {error?.data?.message || (typeof error.error === 'string' ? error.error : 'An error occurred')}
         </Message>
       ) : (
         <>
