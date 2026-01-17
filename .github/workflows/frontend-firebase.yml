@@ -39,8 +39,31 @@ jobs:
         env:
           CI: false
 
+      - name: Verify build directory exists
+        run: |
+          if [ ! -d "build" ]; then
+            echo "ERROR: Build directory not found!"
+            exit 1
+          fi
+          echo "Build directory found:"
+          ls -la build/
+          echo "Checking for index.html:"
+          ls -la build/index.html || echo "WARNING: index.html not found in build/"
+
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
+      - name: Verify Firebase configuration
+        run: |
+          echo "Checking firebase.json:"
+          cat firebase.json
+          echo "Checking .firebaserc:"
+          cat .firebaserc
+
+      - name: Clear Firebase cache
+        run: |
+          rm -rf .firebase
+          echo "Firebase cache cleared"
+
       - name: Deploy to Firebase
-        run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --project proshop-47e32
+        run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }} --project proshop-47e32 --force
