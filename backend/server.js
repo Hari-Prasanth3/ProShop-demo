@@ -1,35 +1,48 @@
-import path from "path";
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
-dotenv.config();
+
 import connectDB from "./config/db.js";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
-import cors from "cors";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
+dotenv.config();
 
-// connectDB(value); //connect to mangoDB
-const mongoURI = 'mongodb+srv://harihari71775:Ey6P2vquiY18mrZS@cluster0.i9gmnew.mongodb.net/';
-connectDB(mongoURI);
-const port =  5001;
+connectDB(process.env.MONGO_URI);
 
 const app = express();
-//body parser middleware
-app.use(express.json());
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL 
-    : 'http://localhost:3000',
-  credentials: true
-}));
-app.use(express.urlencoded({ extended: true }));
-//cookieParser middleware
-app.use(cookieParser());
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors({ origin: true, credentials: true }));
+
+// ✅ ROOT ROUTE
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "ProShop API is running 🚀",
+    environment: process.env.NODE_ENV || "development",
+  });
+});
+
+// Debug endpoint to check cookies
+app.get("/api/debug/cookies", (req, res) => {
+  res.status(200).json({
+    cookies: req.cookies,
+    hasJwtCookie: !!req.cookies.jwt,
+    headers: {
+      cookie: req.headers.cookie,
+      authorization: req.headers.authorization,
+    }
+  });
+});
+
+// API ROUTES
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
@@ -39,24 +52,8 @@ app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
 );
 
-const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-
-if (process.env.NODE_ENV === "production") {
-  // set static folder
-  app.use(express.static(path.join(__dirname, "/frontend/build")));
-
-  // any route that is not api will be redirected to indexedDB.html
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running....");
-  });
-}
-
+// ERROR HANDLERS (always last)
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`server running on port ${port}`));
+export default app;

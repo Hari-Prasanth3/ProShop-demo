@@ -47,7 +47,7 @@ const ProfileScreen = () => {
         dispatch(setCredentials(res));
         toast.success("Profile Updated successfully");
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : err.error?.message) || 'An error occurred');
       }
     }
   };
@@ -105,7 +105,7 @@ const ProfileScreen = () => {
           <Loader />
         ) : error ? (
           <Message variant="danger">
-            {error?.data?.message || error.err}
+            {error?.data?.message || (typeof error.err === 'string' ? error.err : error.err?.message) || (typeof error.error === 'string' ? error.error : error.error?.message) || 'An error occurred'}
           </Message>
         ) : (
           <Table striped hover responsive className="table-sm">

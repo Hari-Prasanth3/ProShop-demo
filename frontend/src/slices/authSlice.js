@@ -10,6 +10,10 @@ const initialState = {
         setCredentials: (state, action) => {
             state.userInfo = action.payload;
             localStorage.setItem('userInfo', JSON.stringify(action.payload));
+            // Also store token separately if provided
+            if (action.payload.token) {
+                localStorage.setItem('token', action.payload.token);
+            }
         },
        logout: (state, action) => {
             state.userInfo = null;

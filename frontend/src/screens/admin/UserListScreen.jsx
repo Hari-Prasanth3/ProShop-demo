@@ -22,7 +22,7 @@ const UserListScreen = () => {
         toast.success("User deleted");
         refetch();
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : err.error?.message) || 'An error occurred');
       }
     }
   };
@@ -34,7 +34,7 @@ const UserListScreen = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error}</Message>
+        <Message variant="danger">{error?.data?.message || (typeof error.error === 'string' ? error.error : error.error?.message) || 'An error occurred'}</Message>
       ) : (
         <Table striped hover responsive className="table-sm">
           <thead>

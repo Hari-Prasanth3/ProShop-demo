@@ -66,7 +66,7 @@ const OrderScreen = () => {
         refetch();
         toast.success("Payment successful");
       } catch (err) {
-        toast.error(err?.data?.message || err.message);
+        toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : err.error?.message) || err?.message || 'An error occurred');
       }
     });
   }
@@ -101,14 +101,14 @@ const OrderScreen = () => {
       refetch();
       toast.success("Order delivered");
     } catch (err) {
-      toast.error(err?.data?.message || err.message);
+      toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : err.error?.message) || err?.message || 'An error occurred');
     }
   };
 
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant="danger">{error?.data?.message || error.error}</Message>
+    <Message variant="danger">{error?.data?.message || (typeof error.error === 'string' ? error.error : error.error?.message) || 'An error occurred'}</Message>
   ) : (
     <>
       <h1>Order {order._id}</h1>

@@ -33,7 +33,7 @@ const ProductListScreen = () => {
         toast.success("Product deleted");
         refetch();
       } catch (err) {
-        toast.error(err?.data?.message || err.message);
+        toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : err.error?.message) || err?.message || 'An error occurred');
       }
     }
   };
@@ -44,7 +44,7 @@ const ProductListScreen = () => {
         await createProduct();
         refetch();
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error(err?.data?.message || (typeof err.error === 'string' ? err.error : err.error?.message) || 'An error occurred');
       }
     }
   };
@@ -68,7 +68,7 @@ const ProductListScreen = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant="danger">{error.data.message}</Message>
+        <Message variant="danger">{error?.data?.message || (typeof error.error === 'string' ? error.error : error.error?.message) || 'An error occurred'}</Message>
       ) : (
         <>
           <Table striped hover responsive className="table-sm">
